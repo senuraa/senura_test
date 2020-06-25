@@ -1,22 +1,33 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, Button, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import InputField from './InputField';
+import {emailValidate} from '../utils/validations';
+
 class SignIn extends Component {
   constructor() {
     super();
-    this.state = {email: '', password: ''};
+    this.state = {
+      email: {value: '', error: false},
+      password: {value: '', error: false},
+    };
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.submit = this.submit.bind(this);
   }
   handleEmailChange(email) {
-    this.setState({email: email});
+    this.setState({email: {value: email}});
   }
   handlePasswordChange(pass) {
-    this.setState({password: pass});
+    this.setState({password: {value: pass}});
   }
   submit() {
-    console.log(this.state.email);
-    console.log(this.state.password);
+    const {email, password} = this.state;
+    if (!emailValidate(email.value)) {
+      this.setState({email: {error: true}});
+    }
+    if (password.value === '') {
+      this.setState({password: {error: true}});
+    }
   }
   render() {
     const {
@@ -27,26 +38,31 @@ class SignIn extends Component {
       button,
       buttonTxt,
     } = styles;
+    const {email, password} = this.state;
     return (
       <View style={viewContainer}>
         <Text style={titleText}>Sign In</Text>
         <View style={container}>
           <InputField
-            value={this.state.email}
+            errorMsg="Invalid Email"
+            value={email.value}
             onChange={this.handleEmailChange}
             placeholder="you@address.net"
             secureText={false}
             label="Email"
+            error={email.error}
           />
           <InputField
-            value={this.state.password}
+            errorMsg="Password should not be empty"
+            error={password.error}
+            value={password.value}
             onChange={this.handlePasswordChange}
             placeholder="Password"
             secureText={true}
             label="Password"
           />
           <View style={btnStyle}>
-            <TouchableOpacity style={button}>
+            <TouchableOpacity style={button} onPress={this.submit}>
               <Text style={buttonTxt}> Sign-in </Text>
             </TouchableOpacity>
             {/*<Button onPress={this.submit} title="Sign in" />*/}

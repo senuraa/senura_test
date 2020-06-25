@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 import SignIn from './src/components/SignIn';
 const App: () => React$Node = () => {
   return (
